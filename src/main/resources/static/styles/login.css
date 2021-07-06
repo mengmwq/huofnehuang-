@@ -1,0 +1,168 @@
+body,html {
+    margin:0;
+    padding:0;
+    height:100%;
+    overflow: hidden;
+}
+.wrap {
+    width:980px;
+    margin:0 auto;
+    
+}
+.space {
+    padding-left:5px;
+    padding-right:5px;
+}
+.tal {
+    text-align:left;
+}
+.tar {
+    text-align:right;
+}
+.tac {
+    text-align:center;
+}
+.ml20 {
+    margin-left:20px;
+}
+.mt20 {
+    margin-top:20px;
+}
+.mb10 {
+    margin-bottom:10px;
+}
+
+.bgSignIn_yigong{
+    background: #f4f4f4;
+    width:100%;
+    height:100%;
+    background-size:cover;
+}
+.logo {
+    padding-top:10px;
+}
+.logoBox img {
+    border-right:1px solid #eee;
+    padding-right:40px;
+    padding-top:30px;
+}
+.loginTitle {
+    border-bottom:2px solid #C1272D;
+    padding-bottom:10px;
+    text-align:center;
+    color:#C1272D;
+    letter-spacing: 4px;
+    
+}
+.btnBox .el-button--primary {
+    background-color:#C1272D!important;
+    border-color: #C1272D!important;
+}
+.loginBox {
+    position: absolute;
+    left:50%;
+    top:50%;
+    width:700px;
+    height:320px;
+    margin-top:-180px;
+    margin-left:-350px;
+}
+.loginMask{
+
+    background: #fff;
+    position: relative;
+    z-index:1;
+    width:700px;
+    height:360px;
+    box-shadow: 0 7px 4px 0 rgba(0,0,0,0.50);
+    /* border-radius: 43px; */
+}
+.loginMain{
+    position: absolute;
+    left:0;
+    top:0;
+    padding:30px 40px;
+    z-index:2;
+    width:700px;
+}
+.el-form-item__label{
+    color:#333;
+}
+.loginForm{
+    margin-top:20px;
+}
+.modifyPwd{
+    margin-top:10px;
+}
+.loginForm .el-form-item,
+.modifyPwd .el-form-item{
+    margin-bottom:15px;
+}
+.rememberPhone{
+    margin:10px 20px 30px 0;
+}
+.rememberUser{
+    color:#333;
+}
+.signup {
+    font-size:13px;
+    text-align: right;
+}
+.signup a {
+    color:#C1272D;
+    padding-top:4px;
+}
+.phoneLogin{
+    /* display:none; */
+    text-align: center;
+    padding:50px;
+    /* background:#F96E2C; */
+}
+.inputBox .el-input__inner {
+    background:#555;
+    color:#333;
+}
+.header {
+    border-bottom:5px solid #C1272D;
+    height:100px!important;
+}
+.header .logo{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.main {
+   width:100%;
+  
+   background:red;
+   
+}
+.footer {
+    text-align: center;
+    background-color:#1F2631;
+    color:#fff;
+    line-height: 60px;
+    position: absolute;
+    left:0;
+    bottom:0;
+    width:100%;
+}
+.codeBox {
+    position: relative;
+
+}
+.codeBox .codeBtn{
+    position: absolute;
+    right:0;
+    top:0;
+}
+
+.hiddenUser{
+  width:0;
+  height:0;
+  z-index:-1;
+  filter:alpha(opacity=0); /* IE */
+    -moz-opacity:0; /* 老版Mozilla */
+    -khtml-opacity:0; /* 老版Safari */
+    opacity: 0; /* 支持opacity的浏览器*/
+}

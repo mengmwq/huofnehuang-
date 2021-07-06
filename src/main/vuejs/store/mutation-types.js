@@ -1,0 +1,41 @@
+
+/**
+ * Created by sunzleong on 2018/10/30.
+ */
+
+// 数据字典
+export const SET_DISTS = 'SET_DISTS'
+//查询角色
+export const SELECT_ROLE = 'SELECT_ROLE'
+export const GET_ALL_ROLE_DETAILS = 'GET_ALL_ROLE_DETAILS'
+export const GET_ALL_ROLE_LIST = 'GET_ALL_ROLE_LIST'
+
+//资源
+export const SELECT_ALL_RESOURCE_INFO = 'SELECT_ALL_RESOURCE_INFO'
+
+export const SELECT_RESOURCE_BY_ROLE_ID = 'SELECT_RESOURCE_BY_ROLE_ID'
+
+//菜单标签
+export const ADD_VISITED_VIEWS = 'ADD_VISITED_VIEWS'
+export const DEL_VISITED_VIEWS = 'DEL_VISITED_VIEWS'
+//机构
+export const GET_ORGANIZATION_INFO_LIST = 'GET_ORGANIZATION_INFO_LIST'
+export const SELECT_ORGS_BY_ROLE_ID = 'SELECT_ORGS_BY_ROLE_ID'
+
+
+//用户
+export const GET_USER_INFO_LIST = 'GET_USER_INFO_LIST'
+//特殊用户
+export const GET_SPECIAL_USER_PAGE = 'GET_SPECIAL_USER_PAGE'
+
+//品牌
+export const GET_BRAND_PAGE = 'GET_BRAND_PAGE'
+
+//消息
+export const SET_MESSAGE_LIST = 'SET_MESSAGE_LIST'
+
+//消息中心
+export const NOTIFY_PAGE = 'NOTIFY_PAGE'
+
+
+

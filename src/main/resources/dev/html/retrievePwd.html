@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="height100">
+<head>
+<meta charset="UTF-8">
+<title>找回密码_火凤凰</title>
+<!-- 引入element-ui样式 -->
+ <link href="https://cdn.bootcss.com/element-ui/1.4.3/theme-default/index.css" rel="stylesheet" />
+<link rel="stylesheet" href="/datacenter/css/huaxia.css" />
+</head>
+<body class="height100">
+	<div class="login" id="app">
+		<div class="login_box">
+			<div class="login_img">
+				<img src="/img/login_one.jpg"></img>
+			</div>
+			<div class="login_white_box">
+				<div class="login_whit_inner">
+					<div class="password_text">找回密码——第二步</div>
+					<el-form class="login_form_input" :rules="rules" :model="account" >
+						<div class="password_input">
+							<el-form-item prop="password_one">
+								<el-input ref="password_one" type="password" placeholder="请输入新密码" v-model="account.password_one"></el-input>
+							</el-form-item>
+						</div>
+						<div class="password_input">
+							<el-form-item prop="password_two">
+								<el-input ref="password_two" type="password" placeholder="请再次输入新密码" v-model="account.password_two"></el-input>
+							</el-form-item>
+						</div>
+					</el-form>
+					<div class="password_bnt_top">
+						<el-button type="primary" class="login_but bnt_blue "  v-on:click.native.prevent="updatePassword">登录</el-button>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+<!-- 先引入 Vue -->
+  <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+  <!-- 引入组件库 -->
+  <script src="https://cdn.bootcss.com/element-ui/1.4.3/index.js"></script>
+<!--   <script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script> -->
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+  <script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.js"></script>
+  <script src="http://cdn.bootcss.com/blueimp-md5/1.1.0/js/md5.js"></script> 
+  <script>
+	new Vue({
+		el:'#app',
+		mounted(){
+
+    	},	
+      	data:function(){
+			return{
+				account:{
+					password_one:'',
+		      		password_two:''
+				},
+				rules:{
+					password_one:[
+		             	 {required: true, message: '不能为空', trigger: 'blur'}
+	              	],
+	              	password_two:[
+   		             	 {required: true, message: '不能为空', trigger: 'blur'}
+	              	]
+				},
+			 checked: true
+			};
+		},
+		methods:{
+			updatePassword(){
+				//判断两次输入的密码是否一致
+				const password_one=this.$refs.password_one.value;
+				const password_two=this.$refs.password_two.value;
+				
+				if(password_one == password_two){
+					//密码加密
+					// var passwordOne = this.encrypt({password_one : this.account.password_one})
+					var passwordOne = md5(password_one);
+					// console.log("获取到的加密后的密码是:"+passwordOne);
+					//获取电话号码
+					var telphone = localStorage.getItem('telphone');
+					console.log("获取到的登录账号是:"+telphone);
+					//修改密码之后返回到登录页
+					$.ajax({
+		            	url:'/proxy/bk/updatePasswordByTel',
+		            	type:'get',
+		            	dataType:'text',
+		            	data:{loginPassword:passwordOne,tel:telphone},
+		            	success:function(data){
+		            		this.code = data;
+		            		console.log(data);
+		            		//跳转到登录页
+		            		 window.open('index','_self');
+		            	},
+		            	error:function(data){
+		            		console.log(data);
+		            	}
+		            });
+					
+				}else{
+					alert("两次输入密码不一致!");
+				}
+				
+			}
+		}
+	})
+	
+  </script>
+
+</html>

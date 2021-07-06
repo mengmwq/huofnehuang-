@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name=viewport content="width=device-width,initial-scale=1">
+  <title>管理员登录_火凤凰</title>
+  <link rel="shortcut icon" href="/images/favicon.ico" />
+  <!-- import CSS -->
+  <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+  <link rel="stylesheet" href="../styles/element-index.css">
+  <link rel="stylesheet" href="../styles/iconfont.css">
+  <link rel="stylesheet" href="../styles/login.css">
+  <script src="https://webapi.amap.com/maps?v=1.3&key=728c4432f7515c953c09ec23cb9f97f1"></script>
+  <script src="../js/jquery1.12.4.js"></script>
+</head>
+
+<body class="bgSignIn_yigong">
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <div class="logo">
+          <img src="../images/logo-login.png">
+          <a href="/login_truck">确认车辆登录状态</a>
+        </div>
+      </el-header>
+      <div class="main">
+        <img src="../images/bg-login.png" width="100%" height="100%">
+        <div class="loginBox">
+          <div class="loginMask"></div>
+          <el-row class="loginMain" type="flex" justify="space-between" :gutter="10">
+            <el-col :span="12">
+              <div class="logoBox">
+                <img src="../images/logo.png" alt="">
+              </div>
+            </el-col>
+            <el-col :span="11">
+              <template v-if="isModifyPwd">
+                <div class="loginTitle">{{titleFlag}}</div>
+                <el-form status-icon label-width="85px" ref="ruleForm2" class="loginForm modifyPwd">
+                  <div class="hiddenUser">
+                    <input type="text" name="username">
+                    <input type="password" name="passord">
+                  </div>
+                  <el-form-item label="手机号：" v-if="titleFlag=='修改密码'">
+                    <el-input v-model.trim="user.tel" readonly autocomplete="off" maxlength="11" placeholder="请输入手机号">
+                      <i slot="prefix" class="iconfont icon-shouji"></i>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="手机号：" v-else>
+                    <el-input v-model.trim="user.tel" autocomplete="off" maxlength="11" placeholder="请输入手机号">
+                      <i slot="prefix" class="iconfont icon-shouji"></i>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="验证码：">
+                    <div class="codeBox">
+                      <el-input v-model.trim="user.code" autocomplete="off" maxlength="6" placeholder="验证码"></el-input>
+                      <el-button type="default" class="codeBtn" style="width:60%;"
+                        v-on:click.prevent="sendCode('forget')" v-bind:loading="submitLoading">{{codeTips}}</el-button>
+                    </div>
+
+                  </el-form-item>
+                  <el-form-item label="新密码：">
+                    <el-input v-model.trim="user.pwd" type="password" autocomplete="off" placeholder="请输入密码"
+                      maxheight="15">
+                      <i slot="prefix" class="iconfont icon-key"></i>
+                    </el-input>
+                  </el-form-item>
+
+                  <el-form-item label="确认密码：">
+                    <el-input v-model.trim="user.confirmPwd" type="password" autocomplete="off" placeholder="请输入密码">
+                      <i slot="prefix" class="iconfont icon-key"></i>
+                    </el-input>
+                  </el-form-item>
+                  <el-row class="mt10" :gutter="20">
+                    <el-col :span="12" class="btnBox">
+                      <el-button type="primary" style="width:100%;" v-on:click.prevent="modifyPwd"
+                        v-bind:loading="submitLoading">提交</el-button>
+                    </el-col>
+                    <el-col :span="12" class="btnBox">
+                      <el-button type="default" style="width:100%;" v-on:click.prevent="goBack()">返回</el-button>
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </template>
+              <template v-if="!isModifyPwd">
+
+                <div class="loginTitle">登 录</div>
+                <el-form status-icon label-width="70px" ref="ruleForm2" class="loginForm">
+                  <div class="hiddenUser">
+                    <input type="text" name="username">
+                    <input type="password" name="passord">
+                  </div>
+                  <el-form-item label="账号：">
+                    <el-input v-model.trim="account.username" autocomplete="off" maxlength="11" placeholder="请输入手机号">
+                      <i slot="prefix" class="iconfont icon-shouji"></i>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="验证码：">
+                    <div class="codeBox">
+                      <el-input v-model.trim="account.code" autocomplete="off" maxlength="6" placeholder="验证码">
+                      </el-input>
+                      <el-button type="default" class="codeBtn" style="width:60%;"
+                        v-on:click.prevent="sendCode('login')" v-bind:loading="submitLoading">{{codeTips}}</el-button>
+                    </div>
+
+                  </el-form-item>
+                  <el-form-item label="密码：">
+                    <el-input v-model.trim="account.pwd" type="password" @keyup.enter.native="handleLogin"
+                      autocomplete="off" placeholder="请输入密码">
+                      <i slot="prefix" class="iconfont icon-key"></i>
+                    </el-input>
+                  </el-form-item>
+                  <el-row>
+                    <!-- <el-col :span="12" class="tal">
+                        <el-checkbox v-model="autologin" class="rememberUser">记住账号</el-checkbox>
+                      </el-col> -->
+                    <el-col :span="24" class="tar">
+                      <a href="javascript:;" style="font-size:14px;" @click="forgetPwd">忘记密码</a>
+                    </el-col>
+                  </el-row>
+                  <el-row class="mt20" :gutter="20">
+                    <el-col :span="24" class="btnBox">
+                      <el-button type="primary" style="width:100%;" v-on:click.prevent="handleLogin"
+                        v-bind:loading="logining">登录</el-button>
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </template>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+      <el-footer class="footer">
+        RED PHOENIX © 2018 . All Rights Reserved.
+      </el-footer>
+    </el-container>
+
+
+  </div>
+
+  <!-- import Vue before Element -->
+  <script src="../js/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="../js/index.js"></script>
+
+  <script src="../js/crypto-js.js"></script>
+  <script src="../js/vue-cookies.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function () {
+        const usernameVal = localStorage.getItem('username')
+        const username = usernameVal || ''
+        return {
+//          baseUrl:'http://localhost:9000',
+          baseUrl:'http://47.103.132.101:9000',
+          submitLoading: false,
+          uId: '',
+          logining: false,
+          autologin: false,
+          isModifyPwd: false,
+          codeIndex: 60,
+          codeTips: '获取验证码',
+          codeTime: null,
+          codeNumber: '',
+          account: {
+            username: username,
+            pwd: ''
+          },
+          titleFlag: '',
+          user: {
+            tel: '',
+            pwd: '',
+            confirmPwd: '',
+            code: ''
+          }
+
+        }
+      },
+      mounted () {
+        this.backfillAccount()
+        this.rememberMe()
+      },
+      methods: {
+        /* 忘记密码 */
+        forgetPwd () {
+          this.isModifyPwd = true
+          this.titleFlag = '忘记密码'
+        },
+        /** md5加密 */
+        md5encode (word) {
+          return CryptoJS.MD5(word).toString()
+        },
+        /* 修改密码 */
+        modifyPwd () {
+          const params = this.user
+          const codeNumber = params.code
+          // 验证码
+          if (!codeNumber) {
+            this.$message({
+              showClose: true,
+              message: '"请输入验证码"',
+              type: 'error'
+            })
+            return
+            // } else if (this.md5encode(codeNumber) != this.codeNumber) {
+          } else if (codeNumber != this.codeNumber) {
+            this.$message({
+              showClose: true,
+              message: '"验证码错误"',
+              type: 'error'
+            })
+            return
+          }
+          // 密码
+          const pwd = params.pwd
+          const confirmPwd = params.confirmPwd
+          const regPwd = /^[A-Za-z0-9]{6,15}$/
+          if (!pwd) {
+            this.$message({
+              showClose: true,
+              message: '"请输入密码"',
+              type: 'error'
+            })
+            return
+          } else if (!regPwd.test(pwd)) {
+            this.$message({
+              showClose: true,
+              message: '"请正确输入密码"',
+              type: 'error'
+            })
+            return
+          } else if (!confirmPwd) {
+            this.$message({
+              showClose: true,
+              message: '"请输入确认密码"',
+              type: 'error'
+            })
+
+            return
+          } else if (confirmPwd != pwd) {
+            this.$message({
+              showClose: true,
+              message: '"密码不等于确认密码"',
+              type: 'error'
+            })
+            return
+          }
+          // params.pwd = this.md5encode(pwd);
+          params.uId = this.uId
+          // /api/user/update
+          const that = this
+          $.ajax({
+            url: this.baseUrl+'/proxy/updateByTel',
+            type: 'post',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(params),
+            success (data) {
+              that.isModifyPwd = false
+              that.logining = false
+              that.$message({
+                showClose: true,
+                message: '请重新登录！',
+                type: 'success'
+              })
+            },
+            error: function (data) {}
+          })
+        },
+
+        /** 发送验证码 */
+        sendCode (flag = 'forget') {
+          const regex = /^(1[3-9][0-9])[0-9]{8}$/
+
+          const mobile = flag == 'forget' ? this.user.tel : this.account.username
+          console.log(flag, this.user.tel, mobile, !regex.test(mobile))
+          // 手机号校验
+          if (!mobile) {
+            this.$message({
+              showClose: true,
+              message: '请输入手机号',
+              type: 'error'
+            })
+            return
+          } else if (!regex.test(mobile)) {
+            this.$message({
+              showClose: true,
+              message: '请输入正确的手机号',
+              type: 'error'
+            })
+            return
+          }
+
+          var that = this
+          if (that.codeIndex < 60) return
+          that.codeIndex = 60
+          // 发送验证码
+          this.getVerfiyCodeByTel(item => {
+            if (item === 2) {
+              clearInterval(codeTime)
+              that.codeIndex = 60
+              that.codeTips = '发送验证码'
+            }
+          }, flag)
+
+          // 开启定时器
+          this.codeTime = setInterval(() => {
+            that.codeIndex--
+            that.codeTips = '重发(' + that.codeIndex + ')'
+            if (that.codeIndex <= 0) {
+              clearInterval(that.codeTime)
+              that.codeIndex = 60
+              that.codeTips = '发送验证码'
+            }
+          }, 1000)
+        },
+        /** 根据电话号码获取验证码登录 */
+        getVerfiyCodeByTel (callback, flag) {
+          const regex = /^(1[3-9][0-9])[0-9]{8}$/
+          // const mobile = this.user.tel
+          const mobile = flag == 'forget' ? this.user.tel : this.account.username
+          // 手机号校验
+          if (!mobile) {
+            this.$message({
+              showClose: true,
+              message: '请输入手机号',
+              type: 'error'
+            })
+            return
+          } else if (!regex.test(mobile)) {
+            this.$message({
+              showClose: true,
+              message: '请输入正确的手机号',
+              type: 'error'
+            })
+            return
+          }
+          var modifyParams = this.encrypt({
+            mobileNo: mobile
+          })
+          const that = this
+          $.ajax({
+            url: this.baseUrl+'/proxy/sms/sendCode',
+            type: 'get',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: {
+              mobileNo: mobile
+            },
+            success (data) {
+              that.codeNumber = data
+            },
+            error: function (data) {}
+          })
+        },
+        goBack () {
+          this.isModifyPwd = false
+          this.logining = false
+        },
+        /** 回填记住的账号 */
+        backfillAccount () {
+          if (sessionStorage.getItem('userName')) {
+            this.account.username = sessionStorage.getItem('userName')
+          }
+          if (sessionStorage.getItem('pwd')) {
+            this.account.username = sessionStorage.getItem('pwd')
+          }
+        },
+        /** 记住我 **/
+        rememberMe () {
+          if (this.autologin) {
+            sessionStorage.setItem('userName', this.account.username)
+            sessionStorage.setItem('pwd', this.account.pwd)
+          } else {
+            sessionStorage.removeItem('userName')
+            sessionStorage.removeItem('pwd')
+          }
+        },
+        /** 验证手机是否在数据库中存在 */
+        checkMobile () {
+          let _this = this,
+            mobile = this.account.username
+          let param = {
+            mobile: mobile
+          }
+          const regExp = /^(1[3-9][0-9])[0-9]{8}$/
+          if (regExp.test(mobile)) {
+            // ajax请求接口
+            $.ajax({
+              url: this.baseUrl+'/proxy/isExistMobile',
+              type: 'post',
+              contentType: 'application/json',
+              dataType: 'json',
+              data: JSON.stringify(param),
+              success: function (data) {
+                // 如果data是false
+                if (!data) {
+                  // alert('该手机号未注册, 请先注册!')
+                  _this.$message({
+                    showClose: true,
+                    type: 'warning',
+                    message: '该手机号未注册, 请先注册!'
+                  })
+                }
+              },
+              error: function (data) {
+                /* var msgErr = '';
+                if (data.responseJSON.message) {
+                    var i = JSON.parse(data.responseJSON.message);
+                    console.log(i);
+                    msgErr = i.errorMsg;
+                }
+                _this.$message({
+                    message: msgErr,
+                    type: 'error'
+                }); */
+              }
+            })
+          }
+          //    else{
+          //      this.$message({showClose:true,message:'请正确输入手机号', type:'info'})
+          //    }
+        },
+
+        // 用户名与密码加密
+        encrypt: function (data) {
+          const JsonFormatter = {
+            stringify: function (cipherParams) {
+              // create json object with ciphertext
+              const jsonObj = {
+                ct: cipherParams.ciphertext.toString(CryptoJS.enc.Hex)
+              }
+              // optionally add iv and salt
+              if (cipherParams.iv) {
+                jsonObj.iv = cipherParams.iv.toString()
+              }
+              if (cipherParams.salt) {
+                jsonObj.s = cipherParams.salt.toString()
+              }
+
+              // stringify json object
+              return JSON.stringify(jsonObj)
+            },
+            parse: function (jsonStr) {
+              // parse json string
+              const jsonObj = JSON.parse(jsonStr)
+              // extract ciphertext from json object, and create cipher params object
+              const cipherParams = CryptoJS.lib.CipherParams.create({
+                ciphertext: CryptoJS.enc.Hex.parse(jsonObj.ct)
+              })
+              // optionally extract iv and salt
+              if (jsonObj.iv) {
+                cipherParams.iv = CryptoJS.enc.Hex.parse(jsonObj.iv)
+              }
+              if (jsonObj.s) {
+                cipherParams.salt = CryptoJS.enc.Hex.parse(jsonObj.s)
+              }
+              return cipherParams
+            }
+          }
+          const digestString = CryptoJS.MD5('21a361d96e3e13f5', {
+            asString: true
+          })
+          const pwd = CryptoJS.enc.Hex.parse(digestString
+            .toString()) // 密码必须用Hex或其他方式处理为byte数组，如果直接使用字符串，CryptoJS会用加盐的方法重新生成密码，而且加的盐是随机数，这样在java端就没法解秘了。
+          const iv = CryptoJS.enc.Hex.parse(
+            '11111111111111111111111111111111') // iv在java中必须为16byte长，所以js中也必须设置为相同的长度，否则加密后的结果在java中无法解密。
+          const setting = {
+            iv: iv,
+            // mode:CryptoJS.mode.CBC, //默认值，可以不设置
+            // padding:CryptoJS.pad.Pkcs7,//同上
+            format: JsonFormatter
+          }
+          let ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), pwd, setting)
+          ciphertext = JSON.parse(ciphertext.toString())
+          const params = ciphertext.ct // Base64.encode(ciphertext.toString());
+          return params
+        },
+        // 处理登录
+        handleLogin: function () {
+          const account = this.account
+          // 正常使用
+          const username = account.username
+          const pwd = account.pwd
+          const code = account.code
+
+          if (!username) {
+            this.$message({
+              showClose: true,
+              message: '请输入手机号',
+              type: 'error'
+            })
+            return
+          }
+          if (!pwd) {
+            this.$message({
+              showClose: true,
+              message: '请输入密码',
+              type: 'error'
+            })
+            return
+          }
+          if (!code) {
+            this.$message({
+              showClose: true,
+              message: '请输入验证码',
+              type: 'error'
+            })
+            return
+          }
+          if (code != this.codeNumber) {
+            this.$message({
+              showClose: true,
+              message: '"验证码错误"',
+              type: 'error'
+            })
+            return
+          }
+          if (this.autologin) {
+            localStorage.setItem('username', this.account.username)
+          }
+          this.logining = true
+          var _this = this
+
+          // NProgress.start();
+          var loginParams = this.encrypt({
+            mobile: username,
+            password: pwd
+          })
+          // ajax请求接口
+          $.ajax({
+            url: this.baseUrl+'/proxy/loginApi',
+            type: 'get',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: {
+              pushi_params: loginParams
+            },
+            success: function (data) {
+              console.log(data)
+              if (username === pwd && username) {
+                clearInterval(_this.codeTime)
+                _this.codeTips = '获取验证码'
+                _this.titleFlag = '修改密码'
+                _this.isModifyPwd = true
+                _this.uId = data.uId
+                _this.user.tel = data.tel
+                return false
+              } else {
+                // 暂存用户名信息
+                sessionStorage.setItem('jwt', JSON.stringify(data))
+                window.$cookies.set('jwt', JSON.stringify(data), 60 * 60 * 24)
+                window.open(data.homeUrl, '_self')
+              }
+              // sessionStorage.setItem('jwt', JSON.stringify(data));
+              window.open(data.homeUrl, '_self')
+              // 恢复登录按钮显示
+              _this.logining = false
+            },
+            error: function (data) {
+              let message = data.responseJSON.errorMsg
+              console.log(data, 'error')
+              // if(data.status==500){
+              //   message = JSON.parse(message).errorMsg;
+              // }
+              _this.$message({
+                showClose: true,
+                message: message,
+                type: 'error'
+              })
+              // 恢复登录按钮显示
+              _this.logining = false
+            }
+          })
+
+          // this.$refs.AccountFrom.validate((valid) => {
+          // if (valid) {
+          // } else {
+          //   this.$message({
+          //       message: '请验证用户名或密码!',
+          //       type: 'error'
+          //     });
+          //   return false;
+          // }
+          // })
+        }
+      }
+    })
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+body,html {
+    margin:0;
+    padding:0;
+}
+.wrap {
+    width:980px;
+    margin:0 auto;
+    
+}
+.space {
+    padding-left:5px;
+    padding-right:5px;
+}
+.mt20 {
+    margin-top:20px;
+}
+.mb10 {
+    margin-bottom:10px;
+}
+
+.bgSignIn{
+    background: #333 url(../images/bg_signup.png) top center no-repeat;
+    width:100%;
+    height:100%;
+    background-size:cover;
+}
+.maskCenter {
+    position: absolute;
+    left:0;
+    top:50%;
+    height:320px;
+    width: 100%;
+    margin-top:-160px;
+    z-index:1;
+    opacity: 0.76;
+    background: #FFFFFF;
+}
+.signinBox {
+    position: absolute;
+    z-index:2;
+    /* margin-top:50%; */
+    left:0;
+    top:50%;
+    margin-top:-120px;
+
+}
+.qrCodeInfo p{
+    font-size:12px;
+    margin:0;
+    padding:0;
+    text-align: center;
+}
+.signin{
+    position: relative;
+    top:-130px;
+    background:#F96E2C;;
+    box-shadow: 0 0 12px 0 rgba(0,0,0,0.50);
+    border-radius: 34px;
+    
+}
+.signinTit{
+    text-align:center;
+    padding-top:60px;
+    color: #F96E2C;
+    background:#fff;
+    border-top-left-radius: 34px;
+    border-top-right-radius: 34px;
+    margin:0;
+}
+.signinForm{
+    background:#fff;
+    padding:30px 30px 10px;
+}
+.el-checkbox__label{
+    font-size:12px;
+    font-weight: 400;
+}
+.forgetPwdBtn,.rememberUser {
+    text-decoration: none;
+    color: #63605A;
+    font-size:12px;
+}
+.signinOther{
+   
+    height:220px;
+    position: relative;
+}
+/*箭头向下*/
+.arrow-down ,.arrow-down-blue{
+
+    width: 0;
+height: 0;
+border-style: solid;
+border-width: 60px 164px 0 164px;
+border-color: #fff transparent transparent transparent;
+}
+.arrow-down-blue {
+    border-width: 20px 60px 0 60px;
+border-color: #4890df transparent transparent transparent;
+}
+.signinOr{
+    position: relative;
+    margin:30px auto;
+}
+.line {
+    width:100%;
+    height:1px;
+    border-bottom:1px solid #fff;
+}
+.lineTxt {
+    position: absolute;
+    left:50%;
+    width:50px;
+    margin-left:-25px;
+    top:-8px;
+    color:#fff;
+    background:#F96E2C;
+    text-align: center;
+    font-weight:300;
+    font-size:14px;
+}
+.signItem i{
+    font-size:28px;
+    color:#fff;
+    cursor: pointer;
+}
+.signinFooter{
+    margin-top:30px;
+    text-align: center;
+    font-size:12px;
+    color:#fff;
+
+}
+.signBtnBox{
+    position: absolute;
+    top:0;
+    left:50%;
+    z-index:3;
+    width:120px;
+    height:50px;
+    margin-left:-60px;
+    text-align:center;
+    cursor: pointer;
+}
+.signBtn {
+    width:120px;
+    height:30px;
+    line-height: 40px;
+    color:#fff;
+    background:#4890df;
+    
+}
+.signBtnBox:hover .arrow-down-blue{
+    border-color: #F96E2C transparent transparent transparent;
+}
+.signBtnBox:hover .signBtn{
+    background:#F96E2C;
+}
