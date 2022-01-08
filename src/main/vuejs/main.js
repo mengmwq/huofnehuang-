@@ -25,8 +25,8 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 Vue.use(VueQuillEditor)
 
-// import Print from '@/api/print'
-// Vue.use(Print)
+import Print from '@/api/print'
+Vue.use(Print)
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 Vue.use(Viewer, {

@@ -53,7 +53,7 @@
                   {{form.actualPay.toFixed(2)}}
                 </template>
                 
-              </el-form-item>
+              </el-form-item>s
             </el-col>
             <el-col :span="8">
               <el-form-item label="出差人：" prop="travelerIds">
@@ -92,19 +92,23 @@
         </div>
         <p class="step-title"><span class="step-icon">2</span>交通明细：</p>
         <div class="dash-content pd10" >
-          <el-table class="page-table" :data="trafficData" 
-          show-summary  :summary-method="getSummariesTraffice"
+          <el-table class="page-table" :data="trafficData" show-summary  :summary-method="getSummariesTraffice"
           stripe highlight-current-row v-loading="listLoading" :cell-style="{color:'#333'}"
           >
-            <el-table-column v-for="(header, index) in trafficHeader" v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
+           <div v-for="(header, index) in trafficHeader" :key="index">
+            
+               <el-table-column  v-if="header.show" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
                              :align="header.align" :min-width="header.width" :column-key="header.prop" show-overflow-tooltip>
               <template slot-scope="scope">
                 <div v-if="header.prop == 'trafficTypeId'">
-                {{scope.row.attached.TrafficType[scope.row.trafficTypeId].cnInfo}}
+                <!-- {{scope.row.attached.TrafficType[scope.row.trafficTypeId].cnInfo}} -->
                 </div>
                 <div v-else>{{scope.row[header.prop]}}</div>
               </template>
             </el-table-column>
+            
+           </div>
+            
           </el-table>
         </div>
         <p class="step-title"><span class="step-icon">3</span>住宿明细：</p>
@@ -113,16 +117,19 @@
           show-summary :summary-method="getSummariesStay"
           stripe highlight-current-row v-loading="listLoading" :cell-style="{color:'#333'}"
           >
-            <el-table-column v-for="(header, index) in listStay" v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
+           <template v-for="(header, index) in listStay">
+               <el-table-column  v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
                              :align="header.align" :min-width="header.width" :column-key="header.prop" show-overflow-tooltip>
               <template slot-scope="scope">
                 <div v-if="header.prop == 'cityLevel'">
-                {{scope.row.attached.CityLevel[scope.row.cityLevel].cnInfo}}
+                {{scope.row | CityLevelArr}}
                 </div>
                 <div v-else>{{scope.row[header.prop]}}</div>
               </template>
             </el-table-column>
-            </el-table-column>
+           </template>
+          
+          
             
           </el-table>
         </div>
@@ -132,10 +139,12 @@
           show-summary 
           stripe highlight-current-row v-loading="listLoading" :cell-style="{color:'#333'}"
           >
-            <el-table-column v-for="(header, index) in listMeal" v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
-                             :align="header.align" :min-width="header.width" :column-key="header.prop" show-overflow-tooltip>
+          <template v-for="(header, index) in listMeal" >
+              <el-table-column v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
+                    :align="header.align" :min-width="header.width" :column-key="header.prop" show-overflow-tooltip>
               
             </el-table-column>
+          </template>
           </el-table>
         </div>
         <p class="step-title"><span class="step-icon">5</span>补贴明细：</p>
@@ -144,10 +153,13 @@
           show-summary :summary-method="getSummariesSubsidy"
           stripe highlight-current-row v-loading="listLoading" :cell-style="{color:'#333'}"
           >
-            <el-table-column v-for="(header, index) in listSubsidy" v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
+          <template v-for="(header, index) in listSubsidy">
+             <el-table-column  v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
                              :align="header.align" :min-width="header.width" :column-key="header.prop" show-overflow-tooltip>
              
             </el-table-column>
+          </template>
+          
           </el-table>
         </div>
         <p class="step-title"><span class="step-icon">6</span>其他明细：</p>
@@ -156,10 +168,13 @@
           show-summary :summary-method="getSummariesOther"
           stripe highlight-current-row v-loading="listLoading" :cell-style="{color:'#333'}"
           >
-            <el-table-column v-for="(header, index) in listOther" v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
+           <template v-for="(header, index) in listOther">
+             <el-table-column  v-if="header.show" :key="index" :prop="header.prop"  :label="header.label" :sortable="header.sortable"
                              :align="header.align" :min-width="header.width" :column-key="header.prop" show-overflow-tooltip>
               
             </el-table-column>
+           </template>
+           
             
           </el-table>
         </div>
@@ -215,7 +230,7 @@
     },
  
     data () {
-      const projectCode = this.$route.query.projectCode
+      const projectCode = this.$route.query.projectCode || ''
       return {
         approvalInfo:null,
         isShowPrint:false,
@@ -375,6 +390,16 @@
 
       }
     },
+
+    filters:{
+      CityLevelArr(item){
+        if(!item.cityLevel){
+          return '';
+        }
+        return item.attached.CityLevel[item.cityLevel].cnInfo
+      },
+
+    },
     mounted () {
        this.operate = this.$route.query.id ?  'edit' : 'add'
       // 获取字典信息
@@ -424,8 +449,8 @@
       },
       //打印
       handlePrint(){
-          console.log(this.form);
-      console.log(this.approvalInfo);
+          console.log(this.form,'oooo');
+      console.log(this.approvalInfo,'>>>>>');
         this.isShowPrint = true;
         this.$nextTick(()=>{
             Print('#printContent')
@@ -532,8 +557,8 @@
                 return prev;
               }
             }, 0);
-            console.log(column.property,'hdjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
             if(column.property=='amount'){
+              
               sums[index] = sums[index].toFixed(2)
             }
             
@@ -547,8 +572,10 @@
       //住宿明细
       getSummariesStay(param) {
         const { columns, data } = param;
+
         const sums = [];
         columns.forEach((column, index) => {
+          console.log(`object`, column,index)
           if (index === 0) {
             sums[index] = '合计：';
             return;
@@ -564,6 +591,9 @@
                 return prev;
               }
             }, 0);
+            if(column.property=='amount'){
+              sums[index] = sums[index].toFixed(2)
+            }
             if(column.property=='totalAmount'){
               sums[index] = sums[index].toFixed(2)
             }

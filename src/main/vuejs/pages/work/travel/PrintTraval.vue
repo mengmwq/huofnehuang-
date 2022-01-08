@@ -1,4 +1,6 @@
 <template>
+  
+   
     <div v-if="form">
         
         <div class="printTitle">
@@ -7,6 +9,7 @@
                  申请日期：
                  <span v-if="form.applyDate">{{form.applyDate | DateFormat}}</span>
                  <span v-else>{{form.createDt | DateFormat}}</span>
+              
             </div>
             <div class="center">
                 <h2 class="text-center">
@@ -132,7 +135,7 @@
                                 <td>{{index+1}}</td>
                                 <td>{{item.beginDate | DateFormat}}</td>
                                 <td>{{item.endDate | DateFormat}}</td>
-                                <td>{{item.attached.CityLevel[item.cityLevel].cnInfo}}</td>
+                                <td>{{item | CityLevelArr}}</td>
                                 <td>{{item.residents}}</td>
                                 <td>{{item.amount}}</td>
                                 <td>{{item.roomNum}}</td>
@@ -320,7 +323,7 @@ import Api from '@/api/index'
 
 export default {
    
-    name: "TravelPrint",
+   
     // 制作打印模版组件时，props区域尽量保留。
    
     props: {
@@ -408,8 +411,18 @@ export default {
         };
     },
     mounted(){
+      console.log(this.approvalInfo,)
      
        
+    },
+    filters:{
+      CityLevelArr(item){
+        if(!item.cityLevel){
+          return '';
+        }
+        return item.attached.CityLevel[item.cityLevel].cnInfo
+      },
+
     },
     methods: {
         getSumAmount(arr,attr){
