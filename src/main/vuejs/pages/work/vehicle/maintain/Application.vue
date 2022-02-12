@@ -35,7 +35,7 @@
             </router-link>
           </div>
           <div v-else-if="header.prop === 'registrationNumber'">
-            <router-link :to="{path: '/router/maintainApplicationDetails', query: {id: scope.row.id}}">
+            <router-link :to="{path: '/router/', query: {id: scope.row.id}}">
              {{scope.row.registrationNumber}}
           </router-link>
           </div>

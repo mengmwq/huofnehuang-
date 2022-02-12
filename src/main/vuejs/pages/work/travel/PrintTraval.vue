@@ -323,7 +323,8 @@ import Api from '@/api/index'
 
 export default {
    
-   
+       name: "TravelPrint",
+
     // 制作打印模版组件时，props区域尽量保留。
    
     props: {

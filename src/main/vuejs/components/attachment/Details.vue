@@ -131,6 +131,7 @@ export default {
       let img = "";
       Api.getUrl(key).then(data => {
         if (data) {
+          console.log(`data`, data)
           if (this.isHasImg(key)) {
             //图片预览处理；
             img = data;

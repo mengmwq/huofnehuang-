@@ -410,6 +410,7 @@ export default {
               this.$set(item, "url", item.attachmentUrlKey);
             });
             this.form.attachmentList = res.attachmentList;
+            console.log(res.attachmentList,'res.attachmentListres.attachmentListres.attachmentList')
           } else {
             this.form.attachmentList = [];
           }

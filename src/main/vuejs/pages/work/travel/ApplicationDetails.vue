@@ -53,7 +53,7 @@
                   {{form.actualPay.toFixed(2)}}
                 </template>
                 
-              </el-form-item>s
+              </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="出差人：" prop="travelerIds">
